@@ -4,22 +4,23 @@ services:
     container_name: smartcampus-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: smartcampus-db
-      MYSQL_USER: root
+      MYSQL_DATABASE: smartcampus_db
+      MYSQL_USER: appuser
       MYSQL_PASSWORD: Theekshana.12
     ports:
       - "3306:3306"
     volumes:
-        - smartcampus_db_data:/var/lib/mysql
+      - smartcampus_db_data:/var/lib/mysql
+
   backend:
     build:
       context: ./backend
-      container_name: smartcampus-backend
-      depends_on:
-        - db
-      environment:
-        SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/smartcampus_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Colombo
-      SPRING_DATASOURCE_USERNAME: root
+    container_name: smartcampus-backend
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/smartcampus_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Colombo
+      SPRING_DATASOURCE_USERNAME: appuser
       SPRING_DATASOURCE_PASSWORD: Theekshana.12
       SERVER_PORT: 8085
     ports:
@@ -30,8 +31,9 @@ services:
       context: ./frontend
     container_name: smartcampus-frontend
     depends_on:
-      -backend
+      - backend
     ports:
       - "3000:80"
+
 volumes:
   smartcampus_db_data:
